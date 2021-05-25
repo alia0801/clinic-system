@@ -51,50 +51,86 @@
                 <!-- <p class="masthead-subheading font-weight-light mb-0">Graphic Artist - Web Designer - Illustrator</p> -->
             </div>
         </header>
+<?php
+$_SESSION["inputMessage"] = $_POST["inputMessage"];
+$sql_origin = $_POST["inputMessage"];
+$servername = "localhost";
+$username = "root";
+$password = "esfortest";
+$dbname = "clinic";
 
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+$query_type = strtolower(substr( $sql_origin , 0,6 ));
+if($query_type=='select'){
+    $sql = $sql_origin;
+    $result = $conn->query($sql);
+    $row = mysqli_fetch_array($result);
+    
+    $keys1 = array_keys($row);
+    $keys = array(0=>$keys1[1]);
+    $count = 1;
+    if (count($keys1)>=3){
+        for ($i=3;$i<count($keys1);$i+=2){
+            $keys[$count] = $keys1[$i];
+            $count++;
+          }
+    }
+}
+else{
+    $result = $conn->query($sql_origin);
+}
+// elseif ($query_type=='insert') {
+//     $result = $conn->query($sql_origin);
+
+// }
+// elseif ($query_type=='delete') {
+//     $result = $conn->query($sql_origin);
+    
+// }
+// elseif ($query_type=='update') {
+//     $result = $conn->query($sql_origin);
+    
+// }
+
+?>
         <!-- Contact Section-->
         <section class="page-section" id="contact">
             <div class="container">
                 <div class="row justify-content-center">
                 <div class="panel-body">
-                      <table class="table">
-                        <thead>
-                            <tr>  <th>時間長度</th>  <th>近3月</th>  <th>近6月</th>  <th>近1年</th>  <th>近2年</th>  <th>近3年</th>  </tr>
-                        </thead>
-                        <tbody>
-                            <tr> 
-                              <td> 投入資金 </td>  <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>
-                              </tr>
-                            <tr> 
-                              <td> 資產總額 </td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>
-                              <?php
-                                //   for($i=0;$i<5;$i++){
-                                //     echo( "<td> $his_analy_fmoney[$i] </td>"   );
-                                    
-                                //   }   
-                              ?>
-                              </tr>
-                            <tr> 
-                              <td> 總報酬率 </td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>
-                              <?php
-                                //   for($i=0;$i<5;$i++){
-                                //     echo( "<td> $his_analy[$i] </td>"   );
-                                    
-                                //   }   
-                              ?>
-                              </tr>
-                            <tr> 
-                              <td>標準差 </td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>
-                              <?php
-                                //   for($i=0;$i<5;$i++){
-                                //     echo( "<td> $stddevs2[$i] </td>"   );
-                                    
-                                //   }   
-                              ?>
-                              </tr>
-                            
-                        </tbody>
-                    </table>
+                    <!-- <p><?php //print_r( $query_type);  ?></p> -->
+<?php
+if( $query_type=='select'){
+                    echo "<table class='table'>";
+                        echo "<thead>";
+                            echo '<tr>';
+                                foreach( $keys as $k ){
+                                    echo '<th>'.$k.'</th>';
+                                }  
+                            echo '</tr>';
+                        echo "</thead>";
+                        echo "<tbody>";
+                                foreach( $result as $row ){
+                                    echo '<tr>';
+                                    foreach( $row as $r ){
+                                        echo '<td>'.$r.'</td>';
+                                    }
+                                    echo '</tr>';
+                                }  
+                        echo "</tbody>";
+                    echo "</table>";
+}
+else{
+    echo "<h5> Query OK! </h5>";
+}
+?>
+
                     </div>
                 </div>
             </div>

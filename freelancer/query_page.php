@@ -60,7 +60,7 @@
                         <form id = "info" action="query_ans.php" method="post">
                             <div class="form-floating">
                                 <!-- <textarea class="form-control" id="inputMessage" placeholder="Enter your message here..." style="height: 12rem"></textarea> -->
-                                <input class="form-control" id="inputMessage" placeholder="Enter your message here..." />
+                                <input class="form-control" id="inputMessage" name="inputMessage" placeholder="Enter your message here..." />
                                 <label for="inputMessage">Instruction:</label>
                             </div>
                             <br />
