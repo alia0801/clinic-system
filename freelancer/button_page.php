@@ -20,7 +20,7 @@
         <!-- Navigation-->
         <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
             <div class="container">
-                <a class="navbar-brand" href="#page-top">My clinic database system</a>
+                <a class="navbar-brand" href="http://127.0.0.1/clinic-system/index.php">My clinic database system</a>
                 <button class="navbar-toggler text-uppercase font-weight-bold bg-primary text-white rounded" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                     Menu
                     <i class="fas fa-bars"></i>
@@ -28,7 +28,8 @@
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="http://127.0.0.1/clinic-system/index.php">Home</a></li>
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#portfolio">Portfolio</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="http://127.0.0.1/clinic-system/freelancer/query_page.php">Query</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#portfolio">Button</a></li>
                     </ul>
                 </div>
             </div>
@@ -77,6 +78,15 @@
                                      <option value="Aggregate-Having"> -->
 
                                 </datalist>
+                        <h6> <br> 
+                            hint:
+                            <br>
+                            In table "register_record", id-1 is 'outpatient_id', id-2 is 'patient_id', id-3 is 'nurse_id'.
+                            <br>
+                            In table "treat_record", id-1 is 'doctor_id', id-2 is 'patient_id', id-3 is 'outpatient_id'.
+                            <br>
+                            In other table, just enter id-1 as id. 
+                        </h6>
                         </div>
                     </div>
                 </div>
@@ -93,11 +103,15 @@
                             <h3 class="card-title">Select </h3>
                             <br>
                                     <h5> which table: </h5>
-                                        <input class="form-control" id="select_table"name="select_table" type="text" value="" />
-                                        <h5> select what: <h5>
+                                        <input class="form-control" id="select_table"name="select_table" type="text" list="table_category" value="" />
+                                        <h5> select what: (all=*) <h5>
                                         <input class="form-control" id="select_value"name="select_value" type="text" value="" />
-                                        <h5> id: </h5>
-                                        <input class="form-control" id="select_id" name="select_id" type="text" value="" />
+                                        <h5> id-1: </h5>
+                                        <input class="form-control" id="select_id_1" name="select_id_1" type="text" value="" />
+                                        <h5> id-2: </h5>
+                                        <input class="form-control" id="select_id_2" name="select_id_2" type="text" value="" />
+                                        <h5> id-3: </h5>
+                                        <input class="form-control" id="select_id_3" name="select_id_3" type="text" value="" />
                         </div>
                     </div>
                 </div>
@@ -114,9 +128,13 @@
                             <h3 class="card-title">Delete </h3>
                             <br>
                                         <h5> which table: </h5>
-                                        <input class="form-control" id="delete_table"name="delete_table" type="text" value="" />
-                                        <h5> id: </h5>
-                                        <input class="form-control" id="delete_id" name="delete_id" type="text" value="" />
+                                        <input class="form-control" id="delete_table"name="delete_table" type="text" list="table_category" value="" />
+                                        <h5> id-1: </h5>
+                                        <input class="form-control" id="delete_id_1" name="delete_id_1" type="text" value="" />
+                                        <h5> id-2: </h5>
+                                        <input class="form-control" id="delete_id_2" name="delete_id_2" type="text" value="" />
+                                        <h5> id-3: </h5>
+                                        <input class="form-control" id="delete_id_3" name="delete_id_3" type="text" value="" />
                         </div>
                     </div>
                 </div>
@@ -133,9 +151,8 @@
                             <h3 class="card-title">Insert </h3>
                             <br>
                                         <h5> which table: </h5>
-                                        <input class="form-control" id="insert_table"name="insert_table" type="text" value="" />
-                                        <h5> data: </h5>
-                                        <input class="form-control" id="insert_data" name="insert_data" type="text" value="" />
+                                        <input class="form-control" id="insert_table"name="insert_table" type="text" list="table_category" value="" />
+                                        
                         </div>
                     </div>
                 </div>
@@ -154,13 +171,17 @@
                             <h3 class="card-title">Update </h3>
                             <br>
                                         <h5> which table: </h5>
-                                        <input class="form-control" id="update_table"name="update_table" type="text" value="" />
-                                        <h5> id: </h5>
-                                        <input class="form-control" id="update_id" name="update_id" type="text" value="" />
+                                        <input class="form-control" id="update_table"name="update_table" type="text" list="table_category" value="" />
                                         <h5> which column: </h5>
                                         <input class="form-control" id="update_column"name="update_column" type="text" value="" />
                                         <h5> data: </h5>
                                         <input class="form-control" id="update_data" name="update_data" type="text" value="" />
+                                        <h5> id-1: </h5>
+                                        <input class="form-control" id="update_id_1" name="update_id_1" type="text" value="" />
+                                        <h5> id-2: </h5>
+                                        <input class="form-control" id="update_id_2" name="update_id_2" type="text" value="" />
+                                        <h5> id-3: </h5>
+                                        <input class="form-control" id="update_id_3" name="update_id_3" type="text" value="" />
 
                         </div>
                     </div>
@@ -185,7 +206,19 @@
                                      <option value="Nested-Exists">
                                      <option value="Nested-Not Exists">
                                 </datalist>   
-
+                                <h5> which table: </h5>
+                                <input class="form-control" id="nested_table"name="nested_table" type="text" list="table_category" value="" />
+                                <datalist id="table_category">  
+                                     <option value="chemist">
+                                     <option value="doctor">
+                                     <option value="examine_record">
+                                     <option value="nurse">
+                                     <option value="outpatient">
+                                     <option value="patient">
+                                     <option value="prescription">
+                                     <option value="register_record">
+                                     <option value="treat_record">
+                                </datalist> 
                         </div>
                     </div>
                 </div>
@@ -210,6 +243,8 @@
                                      <option value="Aggregate-Avg">
                                      <option value="Aggregate-Having">
                                 </datalist>
+                                <h5> which table: </h5>
+                                <input class="form-control" id="aggregate_table"name="aggregate_table" type="text" list="table_category" value="" />
                         </div>
                     </div>
                 </div>
@@ -222,7 +257,7 @@
 
     </div>
     <div class="text-center mt-4">
-    <button type="submit" class="btn btn-primary btn-xl" id="sendMessageButton">Query</button>
+    <button type="submit" class="btn btn-primary btn-xl" id="sendMessageButton">Go!</button>
     </div>
     </form>
   </section>

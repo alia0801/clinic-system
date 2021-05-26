@@ -1,3 +1,27 @@
+<?php
+$table = $_GET["table"];
+//      SELECT COLUMN_NAME,ORDINAL_POSITION FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '  doctor  ' ORDER BY `COLUMNS`.`ORDINAL_POSITION` ASC
+$sql = "SELECT COLUMN_NAME,ORDINAL_POSITION FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '".$table."' ORDER BY `COLUMNS`.`ORDINAL_POSITION` ASC";
+// SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'doctor'
+$servername = "localhost";
+$username = "root";
+$password = "esfortest";
+$dbname = "clinic";
+$conn = new mysqli($servername, $username, $password, $dbname);
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+$result = $conn->query($sql);
+$keys = array(0=>0);
+$count = 0;
+foreach( $result as $r ){
+    // print_r($r);
+    $keys[$count] = $r['COLUMN_NAME'];
+    $count += 1;
+}
+// print_r($keys);
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -27,9 +51,9 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ms-auto">
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="http://127.0.0.1/clinic-system/index.php">Home</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="http://127.0.0.1/clinic-system/index.php">Home</a></li>
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="http://127.0.0.1/clinic-system/freelancer/query_page.php">Query</a></li>
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="http://127.0.0.1/clinic-system/freelancer/button_page.php">Button</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#portfolio">Button</a></li>
                     </ul>
                 </div>
             </div>
@@ -37,184 +61,73 @@
         <!-- Masthead-->
         <header class="masthead bg-primary text-white text-center">
             <div class="container d-flex align-items-center flex-column">
-                <!-- Masthead Avatar Image-->
-                <!-- <img class="masthead-avatar mb-5" src="assets/img/avataaars.svg" alt="..." /> -->
                 <!-- Masthead Heading-->
-                <h1 class="masthead-heading text-uppercase mb-0">Query answer</h1>
+                <h1 class="masthead-heading mb-0">Choose query type and input keyword</h1>
                 <!-- Icon Divider-->
                 <div class="divider-custom divider-light">
                     <div class="divider-custom-line"></div>
                     <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
                     <div class="divider-custom-line"></div>
                 </div>
-                <!-- Masthead Subheading-->
-                <!-- <p class="masthead-subheading font-weight-light mb-0">Graphic Artist - Web Designer - Illustrator</p> -->
             </div>
         </header>
-        <?php
-$_SESSION["type"] = $_POST["type"];
-$query_type = strtolower($_POST["type"]);
 
-if ($query_type=='insert') {
-    header("Location: http://127.0.0.1/clinic-system/freelancer/insert_page.php?table=".$_POST["insert_table"]); 
-    exit; //確保重定向後，後續代碼不會被執行 
-}
-
-// $sql_origin = $_POST["inputMessage"];
-$servername = "localhost";
-$username = "root";
-$password = "esfortest";
-$dbname = "clinic";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-if($query_type=='select'){
-    // select `name` from `doctor` where `id` = 1
-    $table = $_POST['select_table'];
-    if( ($table != 'register_record') and ($table != 'treat_record' )){
-        $id = $_POST['select_id_1'];
-        $column = $_POST['select_value'];
-        if( $column != '*'){
-            $sql = "select `".$column."` from `".$table."` where `id` = ".$id; 
-        }
-        else{
-            $sql = "select * from `".$table."` where `id` = ".$id;
-        }
-    }
-    elseif ($table == 'register_record') {
-        $id_1 = $_POST['select_id_1']; //outpatient_id
-        $id_2 = $_POST['select_id_2']; //patient_id
-        $id_3 = $_POST['select_id_3']; //nurse_id
-        $column = $_POST['select_value'];
-        if( $column != '*'){
-            $sql = "select `".$column."` from `".$table."` where ( `outpatient_id` = ".$id_1." and `patient_id` = ".$id_2." and `nurse_id` = ".$id_3.")" ; 
-        }
-        else{
-            $sql = "select * from `".$table."` where ( `outpatient_id` = ".$id_1." and `patient_id` = ".$id_2." and `nurse_id` = ".$id_3.")" ; 
-        }
-    }
-    elseif ($table == 'treat_record') {
-        $id_1 = $_POST['select_id_1']; //doctor_id
-        $id_2 = $_POST['select_id_2']; //patient_id
-        $id_3 = $_POST['select_id_3']; //outpatient_id
-        $column = $_POST['select_value'];
-        if( $column != '*'){
-            $sql = "select `".$column."` from `".$table."` where ( `doctor_id` = ".$id_1." and `patient_id` = ".$id_2." and `outpatient_id` = ".$id_3.")" ; 
-        }
-        else{
-            $sql = "select * from `".$table."` where ( `doctor_id` = ".$id_1." and `patient_id` = ".$id_2." and `outpatient_id` = ".$id_3.")" ; 
-        }
-    }
-}
-elseif($query_type=='delete'){
-    // DELETE FROM table_name WHERE column_name operator value;
-    $table = $_POST['delete_table'];
-    if( ($table != 'register_record') and ($table != 'treat_record' )){
-        $id = $_POST['delete_id_1'];
-        $sql = "delete FROM `".$table."` WHERE `id` = ".$id;
-    }
-    elseif ($table == 'register_record') {
-        $id_1 = $_POST['delete_id_1']; //outpatient_id
-        $id_2 = $_POST['delete_id_2']; //patient_id
-        $id_3 = $_POST['delete_id_3']; //nurse_id
-        $sql = "delete FROM `".$table."` where ( `outpatient_id` = ".$id_1." and `patient_id` = ".$id_2." and `nurse_id` = ".$id_3.")" ; 
-    }
-    elseif ($table == 'treat_record') {
-        $id_1 = $_POST['delete_id_1']; //doctor_id
-        $id_2 = $_POST['delete_id_2']; //patient_id
-        $id_3 = $_POST['delete_id_3']; //outpatient_id
-        $sql = "delete FROM `".$table."` where ( `doctor_id` = ".$id_1." and `patient_id` = ".$id_2." and `outpatient_id` = ".$id_3.")" ; 
-    }
-}
-elseif($query_type=='update'){
-    // UPDATE table_name SET column1=value1, column2=value2, column3=value3··· WHERE some_column=some_value;
-    $table = $_POST['update_table'];
-    $column = $_POST['update_column'];
-    if($column!='salary'){
-        $data = "'".$_POST['update_data']."'";
-    }
-    else{
-        $data = $_POST['update_data'];
-    }
-    
-    if( ($table != 'register_record') and ($table != 'treat_record' )){
-        $id = $_POST['update_id_1'];
-        $sql = "update `".$table."` set `".$column."`=".$data." WHERE `id` = ".$id;
-    }
-    elseif ($table == 'register_record') {
-        $id_1 = $_POST['update_id_1']; //outpatient_id
-        $id_2 = $_POST['update_id_2']; //patient_id
-        $id_3 = $_POST['update_id_3']; //nurse_id
-        $sql = "update `".$table."` set `".$column."`=".$data." where ( `outpatient_id` = ".$id_1." and `patient_id` = ".$id_2." and `nurse_id` = ".$id_3.")" ; 
-    }
-    elseif ($table == 'treat_record') {
-        $id_1 = $_POST['update_id_1']; //doctor_id
-        $id_2 = $_POST['update_id_2']; //patient_id
-        $id_3 = $_POST['update_id_3']; //outpatient_id
-        $sql = "update `".$table."` set `".$column."`=".$data." where ( `doctor_id` = ".$id_1." and `patient_id` = ".$id_2." and `outpatient_id` = ".$id_3.")" ; 
-    }
-}
-
-if(($query_type=='select') or ($query_type=='nested') or ($query_type=='aggegate') ){
-    // $sql = $sql_origin;
-    $result = $conn->query($sql);
-    $row = mysqli_fetch_array($result);
-    
-    $keys1 = array_keys($row);
-    $keys = array(0=>$keys1[1]);
-    $count = 1;
-    if (count($keys1)>=3){
-        for ($i=3;$i<count($keys1);$i+=2){
-            $keys[$count] = $keys1[$i];
-            $count++;
-          }
-    }
-}
-else{
-    $result = $conn->query($sql);
-}
-
-?>
-        <!-- Contact Section-->
-        <section class="page-section" id="contact">
-            <div class="container">
-                <div class="row justify-content-center">
-                <div class="panel-body">
+        <!-- Portfolio Section-->
+    <section class="page-section portfolio" id="portfolio">
+    <div class="container">
+    <form id = "info" action="insert_ans.php" method="post" name="info" class="fullwidth">
+      <div class="row">
+      <div class="col-md-1 col-lg-2">
+      </div>
+        <!-- Portfolio Item 5 -->
+        <div class="col-md-4 col-lg-8">
+              <br>
+            <div class="card text-center" style = "background: #007bff; padding:3px">
+                <div class="stat-widget-two">
+                    <div class="stat-content">
+                        <div class="card bg-retired" style = "background: #c0defc">
+                            <h3 class="card-title">Insert </h3>
+                            <br>
+                                        <h4> which table: </h4>
+                                        <input class="form-control" id="insert_table" name="insert_table" type="text" list="table_category" value=<?php echo "'".$table."'"; ?> />
+                                        <datalist id="table_category">  
+                                             <option value="chemist">
+                                             <option value="doctor">
+                                             <option value="examine_record">
+                                             <option value="nurse">
+                                             <option value="outpatient">
+                                             <option value="patient">
+                                             <option value="prescription">
+                                             <option value="register_record">
+                                             <option value="treat_record">
+                                        </datalist> 
+                                        <h4>Insert data:</h4>
 <?php
-if( ($query_type=='select') or ($query_type=='nested') or ($query_type=='aggegate') ){
-                    echo "<table class='table'>";
-                        echo "<thead>";
-                            echo '<tr>';
-                                foreach( $keys as $k ){
-                                    echo '<th>'.$k.'</th>';
-                                }  
-                            echo '</tr>';
-                        echo "</thead>";
-                        echo "<tbody>";
-                                foreach( $result as $row ){
-                                    echo '<tr>';
-                                    foreach( $row as $r ){
-                                        echo '<td>'.$r.'</td>';
-                                    }
-                                    echo '</tr>';
-                                }  
-                        echo "</tbody>";
-                    echo "</table>";
-}
-elseif(($query_type=='delete') or ($query_type=='update')){
-    echo '<p>'.$sql.'</p>';
-    echo "<h5> Query OK! </h5>";
-}
+                                        foreach($keys as $k){
+                                            echo "<h5>".$k.":</h5>";
+                                            echo "<input class='form-control' id='".$k."' name='".$k."' type='text' value='' />";
+                                        }
 ?>
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+
+
+        
+        <!-- Portfolio Item 4 -->
+
+      </div>
+      <!-- /.row -->
+
+    </div>
+    <div class="text-center mt-4">
+    <button type="submit" class="btn btn-primary btn-xl" id="sendMessageButton">Go!</button>
+    </div>
+    </form>
+  </section>
+
         <!-- Footer-->
         <footer class="footer text-center">
             <div class="container">

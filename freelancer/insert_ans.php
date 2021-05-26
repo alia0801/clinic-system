@@ -20,7 +20,7 @@
         <!-- Navigation-->
         <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
             <div class="container">
-                <a class="navbar-brand" href="http://127.0.0.1/clinic-system/index.php">My clinic database system</a>
+            <a class="navbar-brand" href="http://127.0.0.1/clinic-system/index.php">My clinic database system</a>
                 <button class="navbar-toggler text-uppercase font-weight-bold bg-primary text-white rounded" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                     Menu
                     <i class="fas fa-bars"></i>
@@ -51,16 +51,8 @@
                 <!-- <p class="masthead-subheading font-weight-light mb-0">Graphic Artist - Web Designer - Illustrator</p> -->
             </div>
         </header>
-        <?php
-$_SESSION["type"] = $_POST["type"];
-$query_type = strtolower($_POST["type"]);
+<?php
 
-if ($query_type=='insert') {
-    header("Location: http://127.0.0.1/clinic-system/freelancer/insert_page.php?table=".$_POST["insert_table"]); 
-    exit; //確保重定向後，後續代碼不會被執行 
-}
-
-// $sql_origin = $_POST["inputMessage"];
 $servername = "localhost";
 $username = "root";
 $password = "esfortest";
@@ -72,112 +64,40 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-
-if($query_type=='select'){
-    // select `name` from `doctor` where `id` = 1
-    $table = $_POST['select_table'];
-    if( ($table != 'register_record') and ($table != 'treat_record' )){
-        $id = $_POST['select_id_1'];
-        $column = $_POST['select_value'];
-        if( $column != '*'){
-            $sql = "select `".$column."` from `".$table."` where `id` = ".$id; 
-        }
-        else{
-            $sql = "select * from `".$table."` where `id` = ".$id;
-        }
-    }
-    elseif ($table == 'register_record') {
-        $id_1 = $_POST['select_id_1']; //outpatient_id
-        $id_2 = $_POST['select_id_2']; //patient_id
-        $id_3 = $_POST['select_id_3']; //nurse_id
-        $column = $_POST['select_value'];
-        if( $column != '*'){
-            $sql = "select `".$column."` from `".$table."` where ( `outpatient_id` = ".$id_1." and `patient_id` = ".$id_2." and `nurse_id` = ".$id_3.")" ; 
-        }
-        else{
-            $sql = "select * from `".$table."` where ( `outpatient_id` = ".$id_1." and `patient_id` = ".$id_2." and `nurse_id` = ".$id_3.")" ; 
-        }
-    }
-    elseif ($table == 'treat_record') {
-        $id_1 = $_POST['select_id_1']; //doctor_id
-        $id_2 = $_POST['select_id_2']; //patient_id
-        $id_3 = $_POST['select_id_3']; //outpatient_id
-        $column = $_POST['select_value'];
-        if( $column != '*'){
-            $sql = "select `".$column."` from `".$table."` where ( `doctor_id` = ".$id_1." and `patient_id` = ".$id_2." and `outpatient_id` = ".$id_3.")" ; 
-        }
-        else{
-            $sql = "select * from `".$table."` where ( `doctor_id` = ".$id_1." and `patient_id` = ".$id_2." and `outpatient_id` = ".$id_3.")" ; 
-        }
-    }
+$table = $_POST['insert_table'];
+$sql_k = "SELECT COLUMN_NAME,ORDINAL_POSITION,DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '".$table."' ORDER BY `COLUMNS`.`ORDINAL_POSITION` ASC";
+$result = $conn->query($sql_k);
+$keys = array(0=>0);
+$data_type = array(0=>0);
+$count = 0;
+foreach( $result as $r ){
+    // print_r($r);
+    $keys[$count] = $r['COLUMN_NAME'];
+    $data_type[$count] = $r['DATA_TYPE'];
+    $count += 1;
 }
-elseif($query_type=='delete'){
-    // DELETE FROM table_name WHERE column_name operator value;
-    $table = $_POST['delete_table'];
-    if( ($table != 'register_record') and ($table != 'treat_record' )){
-        $id = $_POST['delete_id_1'];
-        $sql = "delete FROM `".$table."` WHERE `id` = ".$id;
-    }
-    elseif ($table == 'register_record') {
-        $id_1 = $_POST['delete_id_1']; //outpatient_id
-        $id_2 = $_POST['delete_id_2']; //patient_id
-        $id_3 = $_POST['delete_id_3']; //nurse_id
-        $sql = "delete FROM `".$table."` where ( `outpatient_id` = ".$id_1." and `patient_id` = ".$id_2." and `nurse_id` = ".$id_3.")" ; 
-    }
-    elseif ($table == 'treat_record') {
-        $id_1 = $_POST['delete_id_1']; //doctor_id
-        $id_2 = $_POST['delete_id_2']; //patient_id
-        $id_3 = $_POST['delete_id_3']; //outpatient_id
-        $sql = "delete FROM `".$table."` where ( `doctor_id` = ".$id_1." and `patient_id` = ".$id_2." and `outpatient_id` = ".$id_3.")" ; 
-    }
-}
-elseif($query_type=='update'){
-    // UPDATE table_name SET column1=value1, column2=value2, column3=value3··· WHERE some_column=some_value;
-    $table = $_POST['update_table'];
-    $column = $_POST['update_column'];
-    if($column!='salary'){
-        $data = "'".$_POST['update_data']."'";
+//      INSERT INTO  table_name  VALUES (value1, value2, value3...);
+$sql = "INSERT INTO `".$table."` VALUES (";
+$len_k = count($keys);
+// $count = 0;
+for($i=0;$i<$len_k;$i++){
+    $k = $keys[$i];
+    if($data_type[$i]=='int'){
+        $sql = $sql.$_POST[$k];
     }
     else{
-        $data = $_POST['update_data'];
+        $sql = $sql."'".$_POST[$k]."'";
+    }
+    if($i!=($len_k-1)){
+        $sql = $sql.', ';
+    }
+    else{
+        $sql = $sql.')';
     }
     
-    if( ($table != 'register_record') and ($table != 'treat_record' )){
-        $id = $_POST['update_id_1'];
-        $sql = "update `".$table."` set `".$column."`=".$data." WHERE `id` = ".$id;
-    }
-    elseif ($table == 'register_record') {
-        $id_1 = $_POST['update_id_1']; //outpatient_id
-        $id_2 = $_POST['update_id_2']; //patient_id
-        $id_3 = $_POST['update_id_3']; //nurse_id
-        $sql = "update `".$table."` set `".$column."`=".$data." where ( `outpatient_id` = ".$id_1." and `patient_id` = ".$id_2." and `nurse_id` = ".$id_3.")" ; 
-    }
-    elseif ($table == 'treat_record') {
-        $id_1 = $_POST['update_id_1']; //doctor_id
-        $id_2 = $_POST['update_id_2']; //patient_id
-        $id_3 = $_POST['update_id_3']; //outpatient_id
-        $sql = "update `".$table."` set `".$column."`=".$data." where ( `doctor_id` = ".$id_1." and `patient_id` = ".$id_2." and `outpatient_id` = ".$id_3.")" ; 
-    }
 }
 
-if(($query_type=='select') or ($query_type=='nested') or ($query_type=='aggegate') ){
-    // $sql = $sql_origin;
-    $result = $conn->query($sql);
-    $row = mysqli_fetch_array($result);
-    
-    $keys1 = array_keys($row);
-    $keys = array(0=>$keys1[1]);
-    $count = 1;
-    if (count($keys1)>=3){
-        for ($i=3;$i<count($keys1);$i+=2){
-            $keys[$count] = $keys1[$i];
-            $count++;
-          }
-    }
-}
-else{
-    $result = $conn->query($sql);
-}
+$result = $conn->query($sql);
 
 ?>
         <!-- Contact Section-->
@@ -185,32 +105,12 @@ else{
             <div class="container">
                 <div class="row justify-content-center">
                 <div class="panel-body">
+                    <!-- <p><?php //print_r( $keys);  ?></p> -->
 <?php
-if( ($query_type=='select') or ($query_type=='nested') or ($query_type=='aggegate') ){
-                    echo "<table class='table'>";
-                        echo "<thead>";
-                            echo '<tr>';
-                                foreach( $keys as $k ){
-                                    echo '<th>'.$k.'</th>';
-                                }  
-                            echo '</tr>';
-                        echo "</thead>";
-                        echo "<tbody>";
-                                foreach( $result as $row ){
-                                    echo '<tr>';
-                                    foreach( $row as $r ){
-                                        echo '<td>'.$r.'</td>';
-                                    }
-                                    echo '</tr>';
-                                }  
-                        echo "</tbody>";
-                    echo "</table>";
-}
-elseif(($query_type=='delete') or ($query_type=='update')){
-    echo '<p>'.$sql.'</p>';
-    echo "<h5> Query OK! </h5>";
-}
+echo "<h5>".$sql."</h5>";
+echo "<h5> Query OK! </h5>";
 ?>
+
                     </div>
                 </div>
             </div>
