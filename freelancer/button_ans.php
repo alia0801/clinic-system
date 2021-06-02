@@ -73,6 +73,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// 生成sql指令
 if($query_type=='select'){
     // select `name` from `doctor` where `id` = 1
     $table = $_POST['select_table'];
@@ -159,8 +160,92 @@ elseif($query_type=='update'){
         $sql = "update `".$table."` set `".$column."`=".$data." where ( `doctor_id` = ".$id_1." and `patient_id` = ".$id_2." and `outpatient_id` = ".$id_3.")" ; 
     }
 }
+elseif($query_type=='nested'){
+    if($_POST['nested_type']=='Nested-In'){
+        $type = 'IN';
+    }
+    elseif($_POST['nested_type']=='Nested-Not In'){
+        $type = 'NOT IN';
+    }
+    elseif($_POST['nested_type']=='Nested-Exists'){
+        $type = 'EXISTS';
+    }
+    elseif($_POST['nested_type']=='Nested-Not Exists'){
+        $type = 'NOT EXISTS';
+    }
+    $table_select = $_POST['nested_table_select'];
+    $select_col = $_POST['nested_column'];
+    $select_constraint = $_POST['nested_column_constraint'];
+    $nest_select_col = $_POST['nested_column_nest'];
+    $nest_table = $_POST['nested_table_nest'];
+    $nest_condition = $_POST['nested_condition'];
+    $sql = "SELECT `".$select_col."` FROM `".$table_select."` WHERE `".$select_constraint."` ".$type." ( SELECT `".$nest_select_col."` FROM `".$nest_table."` WHERE ".$nest_condition." )";
+}
+elseif($query_type=='aggregate'){
+    
+    if($_POST['aggregate_type']=='Aggregate-Count'){
+        $type = 'COUNT';
+    }
+    elseif($_POST['aggregate_type']=='Aggregate-Sum'){
+        $type = 'SUM';
+    }
+    elseif($_POST['aggregate_type']=='Aggregate-Max'){
+        $type = 'MAX';
+    }
+    elseif($_POST['aggregate_type']=='Aggregate-Min'){
+        $type = 'MIN';
+    }
+    elseif($_POST['aggregate_type']=='Aggregate-Avg'){
+        $type = 'AVG';
+    }
+    
+    
+    $col_to_agg = $_POST['aggregate_column'];
+    $table = $_POST['aggregate_table'];
+    $condition = $_POST['aggregate_condition'];
+    // $group_col = $_POST['aggregate_column_group'];
+    // if ($group_col!=''){
+    //     $sql = "select " . $group_col . "," . $type . "(" .$col_to_agg .") from `" .$table."` where (" .$condition.") group by ".$group_col;
+    // }
+    // else {
+        $sql = "select ".$type."(".$col_to_agg.") from `".$table."` where (".$condition.")";
+    // }
+    
+}
+elseif($query_type=='aggregate-having'){
+    if($_POST['having_type']=='Aggregate-Count'){
+        $type = 'COUNT';
+    }
+    elseif($_POST['having_type']=='Aggregate-Sum'){
+        $type = 'SUM';
+    }
+    elseif($_POST['having_type']=='Aggregate-Max'){
+        $type = 'MAX';
+    }
+    elseif($_POST['having_type']=='Aggregate-Min'){
+        $type = 'MIN';
+    }
+    elseif($_POST['having_type']=='Aggregate-Avg'){
+        $type = 'AVG';
+    }
+    
+    
+    $col_to_agg = $_POST['having_column'];
+    $table = $_POST['having_table'];
+    $condition = $_POST['having_select_condition'];
+    $group_col = $_POST['having_group'];
+    $group_condition = $_POST['having_condition'];
+    if ($group_col!=''){
+        $sql = "SELECT ".$group_col.",".$type."(".$col_to_agg.") FROM `".$table."` WHERE (".$condition.") GROUP BY ".$group_col." HAVING ".$type."(".$col_to_agg.")".$group_condition;
+    }
+    // else {
+    //     $sql = "SELECT "+$type+"("+$col_to_agg+") FROM "+$table+" WHERE ("+$condition+") GROUP BY "+$group_col+" HAVING "+$type+"("+$col_to_agg+")"+$group_condition;
 
-if(($query_type=='select') or ($query_type=='nested') or ($query_type=='aggegate') ){
+    // }
+}
+
+// 執行sql
+if(($query_type=='select') or ($query_type=='nested') or ($query_type=='aggregate') or ($query_type=='aggregate-having') ){
     // $sql = $sql_origin;
     $result = $conn->query($sql);
     $row = mysqli_fetch_array($result);
@@ -186,7 +271,9 @@ else{
                 <div class="row justify-content-center">
                 <div class="panel-body">
 <?php
-if( ($query_type=='select') or ($query_type=='nested') or ($query_type=='aggegate') ){
+if( ($query_type=='select') or ($query_type=='nested') or ($query_type=='aggregate') or ($query_type=='aggregate-having') ){
+    // echo '<p>'.$type.$col_to_agg.$table.$condition.'</p>';
+    echo '<p>'.$sql.'</p>';
                     echo "<table class='table'>";
                         echo "<thead>";
                             echo '<tr>';

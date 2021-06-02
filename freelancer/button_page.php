@@ -66,6 +66,7 @@
                                      <option value="Update">
                                      <option value="Nested">
                                      <option value="Aggregate">
+                                     <option value="Aggregate-Having">
                                      <!-- <option value="Nested-In">
                                      <option value="Nested-Not In">
                                      <option value="Nested-Exists">
@@ -94,7 +95,7 @@
 
       <div class="row">
         <!-- Portfolio Item 1 -->
-        <div class="col-md-6 col-lg-4">
+        <div class="col-md-6 col-lg-3">
               <br>
             <div class="card text-center" style = "background: #007bff; padding:3px">
                 <div class="stat-widget-two">
@@ -119,7 +120,7 @@
         </div>
 
         <!-- Portfolio Item 2 -->
-        <div class="col-md-6 col-lg-4">
+        <div class="col-md-6 col-lg-3">
               <br>
             <div class="card text-center" style = "background: #007bff; padding:3px">
                 <div class="stat-widget-two">
@@ -142,7 +143,7 @@
         </div>
 
         <!-- Portfolio Item 3 -->
-        <div class="col-md-6 col-lg-4">
+        <div class="col-md-6 col-lg-3">
               <br>
             <div class="card text-center" style = "background: #007bff; padding:3px">
                 <div class="stat-widget-two">
@@ -162,7 +163,7 @@
 
 
         <!-- Portfolio Item 5 -->
-        <div class="col-md-6 col-lg-4">
+        <div class="col-md-6 col-lg-3">
               <br>
             <div class="card text-center" style = "background: #007bff; padding:3px">
                 <div class="stat-widget-two">
@@ -206,8 +207,8 @@
                                      <option value="Nested-Exists">
                                      <option value="Nested-Not Exists">
                                 </datalist>   
-                                <h5> which table: </h5>
-                                <input class="form-control" id="nested_table"name="nested_table" type="text" list="table_category" value="" />
+                                <h5> select which table: </h5>
+                                <input class="form-control" id="nested_table_select"name="nested_table_select" type="text" list="table_category" value="" />
                                 <datalist id="table_category">  
                                      <option value="chemist">
                                      <option value="doctor">
@@ -219,6 +220,17 @@
                                      <option value="register_record">
                                      <option value="treat_record">
                                 </datalist> 
+                                <h5> select which column: </h5>
+                                <input class="form-control" id="nested_column"name="nested_column" type="text" value="" />
+                                <h5> constraint by which column: </h5>
+                                <input class="form-control" id="nested_column_constraint"name="nested_column_constraint" type="text" value="" />
+                                
+                                <h5> nested select which column: </h5>
+                                <input class="form-control" id="nested_column_nest"name="nested_column_nest" type="text" value="" />
+                                <h5> nested select which table: </h5>
+                                <input class="form-control" id="nested_table_nest"name="nested_table_nest" type="text" list="table_category" value="" />
+                                <h5> nested select by what condition: </h5><h6>format: [column name] [operation] [value]<br> eg. id=5, salary>50000 </h6>
+                                <input class="form-control" id="nested_condition"name="nested_condition" type="text" value="" />
                         </div>
                     </div>
                 </div>
@@ -231,7 +243,7 @@
                 <div class="stat-widget-two">
                     <div class="stat-content">
                         <div class="card bg-retired" style = "background: #c0defc">
-                            <h3 class="card-title">Aggregate </h3>
+                            <h3 class="card-title">Aggregate<br>(Count/Sum/Max/Min/Avg) </h3>
                             <br>
                                 <h5> which type: <h5>
                                 <input class="form-control" id="aggregate_type"name="aggregate_type" type="text" value="" list="aggregate_category"  autocomplete="off" />
@@ -241,10 +253,52 @@
                                      <option value="Aggregate-Max">
                                      <option value="Aggregate-Min">
                                      <option value="Aggregate-Avg">
-                                     <option value="Aggregate-Having">
+                                     <!-- <option value="Aggregate-Having"> -->
                                 </datalist>
-                                <h5> which table: </h5>
+                                <h5> select which table: </h5>
                                 <input class="form-control" id="aggregate_table"name="aggregate_table" type="text" list="table_category" value="" />
+                                
+                                <h5> aggregate to which column: </h5>
+                                <input class="form-control" id="aggregate_column"name="aggregate_column" type="text" value="" />
+                                
+                                <h5> select what condition:</h5><h6>format: [column name] [operation] [value]<br> eg. id=5, salary>50000 </h6>
+                                <input class="form-control" id="aggregate_condition"name="aggregate_condition" type="text" value="" />
+                                
+                                <!-- <h5> group by which column: </h5>
+                                <input class="form-control" id="aggregate_column_group"name="aggregate_column_group" type="text" value="" /> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+              <br>
+            <div class="card text-center" style = "background: #007bff; padding:3px">
+                <div class="stat-widget-two">
+                    <div class="stat-content">
+                        <div class="card bg-retired" style = "background: #c0defc">
+                            <h3 class="card-title">Aggregate<br>(Having) </h3>
+                            <br>
+                                <!-- <h5> type1-having <h5>
+                                <input class="form-control" id="aggregate_type"name="aggregate_type" type="text" value="Aggregate-Having"/> -->
+                                <h5> which aggregate function: <h5>
+                                <input class="form-control" id="having_type"name="having_type" type="text" value="" list="aggregate_category"  autocomplete="off" />
+                                
+                                <h5> select which table: </h5>
+                                <input class="form-control" id="having_table"name="having_table" type="text" list="table_category" value="" />
+                                
+                                <h5> aggregate to which column: </h5>
+                                <input class="form-control" id="having_column"name="having_column" type="text" value="" />
+                                
+                                <h5> select what condition:</h5><h6>format: [column name] [operation] [value]<br> eg. id=5, salary>50000 </h6>
+                                <input class="form-control" id="having_select_condition"name="having_select_condition" type="text" value="" />
+                                
+                                <h5> group by which column: </h5>
+                                <input class="form-control" id="having_group"name="having_group" type="text" value="" />
+                                
+                                <h5> having condition: </h5><h6>format: [operation] [value]<br> eg. >3, < 50000  </h6>
+                                <input class="form-control" id="having_condition"name="having_condition" type="text" value="" />
                         </div>
                     </div>
                 </div>
