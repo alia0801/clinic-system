@@ -1,5 +1,5 @@
 <?php
-$_SESSION["type"] = $_POST["type"];
+$_SESSION["type"] = $_POST["type"];//從首頁接收到的變數，看是query/button決定要跳到哪一頁
 // echo $_SESSION["type"];
 
 if ($_SESSION["type"]=='Query'){

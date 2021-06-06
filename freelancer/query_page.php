@@ -58,6 +58,7 @@
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-lg-8 col-xl-7">
+                        <!-- 輸入指令的地方，會將這裡輸入的指令傳到下一頁(query_ans)處理 -->
                         <form id = "info" action="query_ans.php" method="post">
                             <div class="form-floating">
                                 <!-- <textarea class="form-control" id="inputMessage" placeholder="Enter your message here..." style="height: 12rem"></textarea> -->

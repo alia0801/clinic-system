@@ -1,8 +1,7 @@
 <?php
-$table = $_GET["table"];
-//      SELECT COLUMN_NAME,ORDINAL_POSITION FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '  doctor  ' ORDER BY `COLUMNS`.`ORDINAL_POSITION` ASC
-$sql = "SELECT COLUMN_NAME,ORDINAL_POSITION FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '".$table."' ORDER BY `COLUMNS`.`ORDINAL_POSITION` ASC";
-// SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'doctor'
+$table = $_GET["table"];// 得到前一頁指定要insert的表格
+
+// 連接資料庫
 $servername = "localhost";
 $username = "root";
 $password = "esfortest";
@@ -12,15 +11,17 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+
+// 查詢該表格應有什麼欄位
+//      SELECT COLUMN_NAME,ORDINAL_POSITION FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '  doctor  ' ORDER BY `COLUMNS`.`ORDINAL_POSITION` ASC
+$sql = "SELECT COLUMN_NAME,ORDINAL_POSITION FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '".$table."' ORDER BY `COLUMNS`.`ORDINAL_POSITION` ASC";
 $result = $conn->query($sql);
 $keys = array(0=>0);
 $count = 0;
 foreach( $result as $r ){
-    // print_r($r);
     $keys[$count] = $r['COLUMN_NAME'];
     $count += 1;
 }
-// print_r($keys);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -62,7 +63,7 @@ foreach( $result as $r ){
         <header class="masthead bg-primary text-white text-center">
             <div class="container d-flex align-items-center flex-column">
                 <!-- Masthead Heading-->
-                <h1 class="masthead-heading mb-0">Choose query type and input keyword</h1>
+                <h1 class="masthead-heading mb-0">Input keyword</h1>
                 <!-- Icon Divider-->
                 <div class="divider-custom divider-light">
                     <div class="divider-custom-line"></div>
@@ -85,6 +86,7 @@ foreach( $result as $r ){
             <div class="card text-center" style = "background: #007bff; padding:3px">
                 <div class="stat-widget-two">
                     <div class="stat-content">
+                    <!-- 以下依據該表格欄位名稱建立要輸入的文字框與提示 -->
                         <div class="card bg-retired" style = "background: #c0defc">
                             <h3 class="card-title">Insert </h3>
                             <br>
@@ -103,6 +105,7 @@ foreach( $result as $r ){
                                         </datalist> 
                                         <h4>Insert data:</h4>
 <?php
+                                        // 依據前面查出來的欄位名稱建立提示與輸入框
                                         foreach($keys as $k){
                                             echo "<h5>".$k.":</h5>";
                                             echo "<input class='form-control' id='".$k."' name='".$k."' type='text' value='' />";

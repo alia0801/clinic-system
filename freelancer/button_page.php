@@ -51,13 +51,14 @@
         <!-- Portfolio Section-->
     <section class="page-section portfolio" id="portfolio">
     <div class="container">
+    <!-- 根據各類query需求，建立輸入欄位 -->
     <form id = "info" action="button_ans.php" method="post" name="info" class="fullwidth">
       <!-- Portfolio Grid Items -->
                 <div class="row justify-content-center">
                     <div class="col-lg-8 col-xl-7">
                         <div class="form-floating">
                             <label for="type">Query type</label>
-                            <br>
+                            <br><!-- 這裡選擇要query的種類 -->
                                 <input type="text" class="form-control" id="type" name="type" list="category" placeholder="Choose a type" value="" autocomplete="off">
                                 <datalist id="category">  
                                      <option value="Select">
@@ -68,17 +69,6 @@
                                      <option value="Nested-Exist">
                                      <option value="Aggregate">
                                      <option value="Aggregate-Having">
-                                     <!-- <option value="Nested-In">
-                                     <option value="Nested-Not In">
-                                     <option value="Nested-Exists">
-                                     <option value="Nested-Not Exists">
-                                     <option value="Aggregate-Count">
-                                     <option value="Aggregate-Sum">
-                                     <option value="Aggregate-Max">
-                                     <option value="Aggregate-Min">
-                                     <option value="Aggregate-Avg">
-                                     <option value="Aggregate-Having"> -->
-
                                 </datalist>
                         <h6> <br> 
                             hint:
@@ -205,8 +195,6 @@
                                 <datalist id="nested_category">  
                                      <option value="Nested-In">
                                      <option value="Nested-Not In">
-                                     <!-- <option value="Nested-Exists">
-                                     <option value="Nested-Not Exists"> -->
                                 </datalist>   
                                 <h5> select which table: </h5>
                                 <input class="form-control" id="nested_table_select"name="nested_table_select" type="text" list="table_category" value="" />
@@ -250,8 +238,6 @@
                                 <h5> which type: </h5>
                                 <input class="form-control" id="exists_type" name="exists_type" type="text" value="" list="nested_category2"  autocomplete="off" />
                                 <datalist id="nested_category2">  
-                                     <!-- <option value="Nested-In">
-                                     <option value="Nested-Not In"> -->
                                      <option value="Nested-Exists">
                                      <option value="Nested-Not Exists">
                                 </datalist>   
@@ -270,8 +256,6 @@
                                 </datalist> 
                                 <h5> select which column: </h5>
                                 <input class="form-control" id="exists_column"name="exists_column" type="text" value="" />
-                                <!-- <h5> constraint by which column: </h5>
-                                <input class="form-control" id="exists_column_constraint"name="exists_column_constraint" type="text" value="" /> -->
                                 
                                 <h5> nested select which column: </h5>
                                 <input class="form-control" id="exists_column_nest"name="exists_column_nest" type="text" value="" />
@@ -301,7 +285,6 @@
                                      <option value="Aggregate-Max">
                                      <option value="Aggregate-Min">
                                      <option value="Aggregate-Avg">
-                                     <!-- <option value="Aggregate-Having"> -->
                                 </datalist>
                                 <h5> select which table: </h5>
                                 <input class="form-control" id="aggregate_table"name="aggregate_table" type="text" list="table_category" value="" />
@@ -312,8 +295,6 @@
                                 <h5> select what condition:</h5><h6>format: [column name] [operation] [value]<br> eg. id=5, salary>50000 </h6>
                                 <input class="form-control" id="aggregate_condition"name="aggregate_condition" type="text" value="" />
                                 
-                                <!-- <h5> group by which column: </h5>
-                                <input class="form-control" id="aggregate_column_group"name="aggregate_column_group" type="text" value="" /> -->
                         </div>
                     </div>
                 </div>
@@ -328,8 +309,6 @@
                         <div class="card bg-retired" style = "background: #c0defc">
                             <h3 class="card-title">Aggregate<br>(Having) </h3>
                             <br>
-                                <!-- <h5> type1-having <h5>
-                                <input class="form-control" id="aggregate_type"name="aggregate_type" type="text" value="Aggregate-Having"/> -->
                                 <h5> which aggregate function: <h5>
                                 <input class="form-control" id="having_type"name="having_type" type="text" value="" list="aggregate_category"  autocomplete="off" />
                                 

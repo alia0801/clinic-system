@@ -52,13 +52,15 @@
             </div>
         </header>
 <?php
+// 接收前一頁輸入的指令
 $_SESSION["inputMessage"] = $_POST["inputMessage"];
 $sql_origin = $_POST["inputMessage"];
+
+// 連接資料庫
 $servername = "localhost";
 $username = "root";
 $password = "esfortest";
 $dbname = "clinic";
-
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 // Check connection
@@ -66,12 +68,16 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+
+// 分別判斷指令是屬於哪個類別後進行處理
 $query_type = strtolower(substr( $sql_origin , 0,6 ));
-if($query_type=='select'){
+if($query_type=='select'){ //查詢
+    // 對資料庫下指令
     $sql = $sql_origin;
     $result = $conn->query($sql);
+
+    // 取得結果與各欄位名稱
     $row = mysqli_fetch_array($result);
-    
     $keys1 = array_keys($row);
     $keys = array(0=>$keys1[1]);
     $count = 1;
@@ -82,21 +88,9 @@ if($query_type=='select'){
           }
     }
 }
-else{
-    $result = $conn->query($sql_origin);
+else{//不是查詢類(update/delete/insert)
+    $result = $conn->query($sql_origin);// 對資料庫下指令
 }
-// elseif ($query_type=='insert') {
-//     $result = $conn->query($sql_origin);
-
-// }
-// elseif ($query_type=='delete') {
-//     $result = $conn->query($sql_origin);
-    
-// }
-// elseif ($query_type=='update') {
-//     $result = $conn->query($sql_origin);
-    
-// }
 
 ?>
         <!-- Contact Section-->
@@ -104,9 +98,10 @@ else{
             <div class="container">
                 <div class="row justify-content-center">
                 <div class="panel-body">
-                    <!-- <p><?php //print_r( $query_type);  ?></p> -->
 <?php
-if( $query_type=='select'){
+    echo '<p>'.$sql.'</p>'; //印出sql指令
+    // 以下準備輸出結果
+    if( $query_type=='select'){// 查詢類，將查詢到的結果已表格方式呈現
                     echo "<table class='table'>";
                         echo "<thead>";
                             echo '<tr>';
@@ -125,10 +120,10 @@ if( $query_type=='select'){
                                 }  
                         echo "</tbody>";
                     echo "</table>";
-}
-else{
-    echo "<h5> Query OK! </h5>";
-}
+    }
+    else{//其他類別則印出OK
+        echo "<h5> Query OK! </h5>";
+    }
 ?>
 
                     </div>

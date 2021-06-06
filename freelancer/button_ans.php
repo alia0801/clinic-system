@@ -52,20 +52,21 @@
             </div>
         </header>
         <?php
+// 接收前一類輸入的類別，用來判斷之後做什麼處理
 $_SESSION["type"] = $_POST["type"];
 $query_type = strtolower($_POST["type"]);
 
+//若是insert類，轉到下一頁繼續輸入
 if ($query_type=='insert') {
     header("Location: http://127.0.0.1/clinic-system/freelancer/insert_page.php?table=".$_POST["insert_table"]); 
     exit; //確保重定向後，後續代碼不會被執行 
 }
 
-// $sql_origin = $_POST["inputMessage"];
+// 連接資料庫
 $servername = "localhost";
 $username = "root";
 $password = "esfortest";
 $dbname = "clinic";
-
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 // Check connection
@@ -74,12 +75,17 @@ if ($conn->connect_error) {
 }
 
 // 生成sql指令
+// 分別判斷指令是屬於哪個類別後進行處理
 if($query_type=='select'){
-    // select `name` from `doctor` where `id` = 1
+    
+    // 取得前一頁輸入的資料並生成sql指令
     $table = $_POST['select_table'];
     if( ($table != 'register_record') and ($table != 'treat_record' )){
+        // 取得資料
         $id = $_POST['select_id_1'];
         $column = $_POST['select_value'];
+
+        //生成指令
         if( $column != '*'){
             $sql = "select `".$column."` from `".$table."` where `id` = ".$id; 
         }
@@ -88,10 +94,13 @@ if($query_type=='select'){
         }
     }
     elseif ($table == 'register_record') {
+        // 取得資料
         $id_1 = $_POST['select_id_1']; //outpatient_id
         $id_2 = $_POST['select_id_2']; //patient_id
         $id_3 = $_POST['select_id_3']; //nurse_id
         $column = $_POST['select_value'];
+
+        //生成指令
         if( $column != '*'){
             $sql = "select `".$column."` from `".$table."` where ( `outpatient_id` = ".$id_1." and `patient_id` = ".$id_2." and `nurse_id` = ".$id_3.")" ; 
         }
@@ -100,10 +109,13 @@ if($query_type=='select'){
         }
     }
     elseif ($table == 'treat_record') {
+        // 取得資料
         $id_1 = $_POST['select_id_1']; //doctor_id
         $id_2 = $_POST['select_id_2']; //patient_id
         $id_3 = $_POST['select_id_3']; //outpatient_id
         $column = $_POST['select_value'];
+
+        //生成指令
         if( $column != '*'){
             $sql = "select `".$column."` from `".$table."` where ( `doctor_id` = ".$id_1." and `patient_id` = ".$id_2." and `outpatient_id` = ".$id_3.")" ; 
         }
@@ -114,28 +126,41 @@ if($query_type=='select'){
 }
 elseif($query_type=='delete'){
     // DELETE FROM table_name WHERE column_name operator value;
+    // 取得前一頁輸入的資料並生成sql指令
     $table = $_POST['delete_table'];
     if( ($table != 'register_record') and ($table != 'treat_record' )){
+        // 取得資料
         $id = $_POST['delete_id_1'];
+
+        //生成指令
         $sql = "delete FROM `".$table."` WHERE `id` = ".$id;
     }
     elseif ($table == 'register_record') {
+        // 取得資料
         $id_1 = $_POST['delete_id_1']; //outpatient_id
         $id_2 = $_POST['delete_id_2']; //patient_id
         $id_3 = $_POST['delete_id_3']; //nurse_id
+
+        //生成指令
         $sql = "delete FROM `".$table."` where ( `outpatient_id` = ".$id_1." and `patient_id` = ".$id_2." and `nurse_id` = ".$id_3.")" ; 
     }
     elseif ($table == 'treat_record') {
+        // 取得資料
         $id_1 = $_POST['delete_id_1']; //doctor_id
         $id_2 = $_POST['delete_id_2']; //patient_id
         $id_3 = $_POST['delete_id_3']; //outpatient_id
+
+        //生成指令
         $sql = "delete FROM `".$table."` where ( `doctor_id` = ".$id_1." and `patient_id` = ".$id_2." and `outpatient_id` = ".$id_3.")" ; 
     }
 }
 elseif($query_type=='update'){
     // UPDATE table_name SET column1=value1, column2=value2, column3=value3··· WHERE some_column=some_value;
+    // 取得資料
     $table = $_POST['update_table'];
     $column = $_POST['update_column'];
+    
+    // 處理取得的資料
     if($column!='salary'){
         $data = "'".$_POST['update_data']."'";
     }
@@ -144,50 +169,51 @@ elseif($query_type=='update'){
     }
     
     if( ($table != 'register_record') and ($table != 'treat_record' )){
+        // 取得資料
         $id = $_POST['update_id_1'];
+
+        //生成指令
         $sql = "update `".$table."` set `".$column."`=".$data." WHERE `id` = ".$id;
     }
     elseif ($table == 'register_record') {
+        // 取得資料
         $id_1 = $_POST['update_id_1']; //outpatient_id
         $id_2 = $_POST['update_id_2']; //patient_id
         $id_3 = $_POST['update_id_3']; //nurse_id
+
+        //生成指令
         $sql = "update `".$table."` set `".$column."`=".$data." where ( `outpatient_id` = ".$id_1." and `patient_id` = ".$id_2." and `nurse_id` = ".$id_3.")" ; 
     }
     elseif ($table == 'treat_record') {
+        // 取得資料
         $id_1 = $_POST['update_id_1']; //doctor_id
         $id_2 = $_POST['update_id_2']; //patient_id
         $id_3 = $_POST['update_id_3']; //outpatient_id
+
+        //生成指令
         $sql = "update `".$table."` set `".$column."`=".$data." where ( `doctor_id` = ".$id_1." and `patient_id` = ".$id_2." and `outpatient_id` = ".$id_3.")" ; 
     }
 }
 elseif($query_type=='nested-in'){
+    // 取得資料
     if($_POST['nested_type']=='Nested-In'){
         $type = 'IN';
     }
     elseif($_POST['nested_type']=='Nested-Not In'){
         $type = 'NOT IN';
     }
-    // elseif($_POST['nested_type']=='Nested-Exists'){
-    //     $type = 'EXISTS';
-    // }
-    // elseif($_POST['nested_type']=='Nested-Not Exists'){
-    //     $type = 'NOT EXISTS';
-    // }
     $table_select = $_POST['nested_table_select'];
     $select_col = $_POST['nested_column'];
     $select_constraint = $_POST['nested_column_constraint'];
     $nest_select_col = $_POST['nested_column_nest'];
     $nest_table = $_POST['nested_table_nest'];
     $nest_condition = $_POST['nested_condition'];
+
+    //生成指令
     $sql = "SELECT ".$select_col." FROM `".$table_select."` WHERE `".$select_constraint."` ".$type." ( SELECT `".$nest_select_col."` FROM `".$nest_table."` WHERE ".$nest_condition." )";
 }
 elseif($query_type=='nested-exist'){
-    // if($_POST['nested_type']=='Nested-In'){
-    //     $type = 'IN';
-    // }
-    // elseif($_POST['nested_type']=='Nested-Not In'){
-    //     $type = 'NOT IN';
-    // }
+    // 取得資料
     if($_POST['exists_type']=='Nested-Exists'){
         $type = 'EXISTS';
     }
@@ -196,14 +222,15 @@ elseif($query_type=='nested-exist'){
     }
     $table_select = $_POST['exists_table_select'];
     $select_col = $_POST['exists_column'];
-    // $select_constraint = $_POST['exists_column_constraint'];
     $nest_select_col = $_POST['exists_column_nest'];
     $nest_table = $_POST['exists_table_nest'];
     $nest_condition = $_POST['exists_condition'];
+
+    // 生成指令
     $sql = "SELECT ".$select_col." FROM `".$table_select."` WHERE ".$type." ( SELECT `".$nest_select_col."` FROM `".$nest_table."` WHERE ".$nest_condition." )";
 }
 elseif($query_type=='aggregate'){
-    
+    // 取得資料
     if($_POST['aggregate_type']=='Aggregate-Count'){
         $type = 'COUNT';
     }
@@ -219,21 +246,16 @@ elseif($query_type=='aggregate'){
     elseif($_POST['aggregate_type']=='Aggregate-Avg'){
         $type = 'AVG';
     }
-    
-    
     $col_to_agg = $_POST['aggregate_column'];
     $table = $_POST['aggregate_table'];
     $condition = $_POST['aggregate_condition'];
-    // $group_col = $_POST['aggregate_column_group'];
-    // if ($group_col!=''){
-    //     $sql = "select " . $group_col . "," . $type . "(" .$col_to_agg .") from `" .$table."` where (" .$condition.") group by ".$group_col;
-    // }
-    // else {
-        $sql = "select ".$type."(".$col_to_agg.") from `".$table."` where (".$condition.")";
-    // }
     
+    // 生成指令
+    $sql = "select ".$type."(".$col_to_agg.") from `".$table."` where (".$condition.")";
 }
 elseif($query_type=='aggregate-having'){
+
+    // 取得前一頁輸入的值
     if($_POST['having_type']=='Aggregate-Count'){
         $type = 'COUNT';
     }
@@ -249,28 +271,26 @@ elseif($query_type=='aggregate-having'){
     elseif($_POST['having_type']=='Aggregate-Avg'){
         $type = 'AVG';
     }
-    
-    
     $col_to_agg = $_POST['having_column'];
     $table = $_POST['having_table'];
     $condition = $_POST['having_select_condition'];
     $group_col = $_POST['having_group'];
     $group_condition = $_POST['having_condition'];
+    
+    // 生成sql語法
     if ($group_col!=''){
         $sql = "SELECT ".$group_col.",".$type."(".$col_to_agg.") FROM `".$table."` WHERE (".$condition.") GROUP BY ".$group_col." HAVING ".$type."(".$col_to_agg.")".$group_condition;
     }
-    // else {
-    //     $sql = "SELECT "+$type+"("+$col_to_agg+") FROM "+$table+" WHERE ("+$condition+") GROUP BY "+$group_col+" HAVING "+$type+"("+$col_to_agg+")"+$group_condition;
-
-    // }
 }
 
 // 執行sql
+// 分別判斷指令是屬於哪個類別後進行處理
 if(($query_type=='select') or ($query_type=='nested-in')or ($query_type=='nested-exist') or ($query_type=='aggregate') or ($query_type=='aggregate-having') ){
-    // $sql = $sql_origin;
+    // 對資料庫下指令
     $result = $conn->query($sql);
-    $row = mysqli_fetch_array($result);
     
+    // 取得結果與各欄位名稱
+    $row = mysqli_fetch_array($result);
     $keys1 = array_keys($row);
     $keys = array(0=>$keys1[1]);
     $count = 1;
@@ -281,7 +301,8 @@ if(($query_type=='select') or ($query_type=='nested-in')or ($query_type=='nested
           }
     }
 }
-else{
+else{//不是查詢類(update/delete)
+    // 對資料庫下指令
     $result = $conn->query($sql);
 }
 
@@ -292,32 +313,34 @@ else{
                 <div class="row justify-content-center">
                 <div class="panel-body">
 <?php
-if( ($query_type=='select') or ($query_type=='nested-in')or ($query_type=='nested-exist') or ($query_type=='aggregate') or ($query_type=='aggregate-having') ){
-    // echo '<p>'.$type.$col_to_agg.$table.$condition.'</p>';
-    echo '<p>'.$sql.'</p>';
-                    echo "<table class='table'>";
-                        echo "<thead>";
-                            echo '<tr>';
-                                foreach( $keys as $k ){
-                                    echo '<th>'.$k.'</th>';
-                                }  
-                            echo '</tr>';
-                        echo "</thead>";
-                        echo "<tbody>";
-                                foreach( $result as $row ){
-                                    echo '<tr>';
-                                    foreach( $row as $r ){
-                                        echo '<td>'.$r.'</td>';
-                                    }
-                                    echo '</tr>';
-                                }  
-                        echo "</tbody>";
-                    echo "</table>";
-}
-elseif(($query_type=='delete') or ($query_type=='update')){
-    echo '<p>'.$sql.'</p>';
-    echo "<h5> Query OK! </h5>";
-}
+echo '<p>'.$sql.'</p>';//印出sql指令
+// 以下準備輸出結果
+    //查詢類以表格方式輸出
+    if( ($query_type=='select') or ($query_type=='nested-in')or ($query_type=='nested-exist') or ($query_type=='aggregate') or ($query_type=='aggregate-having') ){
+                        echo "<table class='table'>";
+                            echo "<thead>";
+                                echo '<tr>';
+                                    foreach( $keys as $k ){
+                                        echo '<th>'.$k.'</th>';
+                                    }  
+                                echo '</tr>';
+                            echo "</thead>";
+                            echo "<tbody>";
+                                    foreach( $result as $row ){
+                                        echo '<tr>';
+                                        foreach( $row as $r ){
+                                            echo '<td>'.$r.'</td>';
+                                        }
+                                        echo '</tr>';
+                                    }  
+                            echo "</tbody>";
+                        echo "</table>";
+    }
+    // 其他類別印出OK
+    elseif(($query_type=='delete') or ($query_type=='update')){
+        // echo '<p>'.$sql.'</p>';
+        echo "<h5> Query OK! </h5>";
+    }
 ?>
                     </div>
                 </div>

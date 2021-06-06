@@ -52,18 +52,19 @@
             </div>
         </header>
 <?php
-
+// 連接資料庫
 $servername = "localhost";
 $username = "root";
 $password = "esfortest";
 $dbname = "clinic";
-
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+
+// 取得該表格應該有哪些欄位以及欄位資料類別
 $table = $_POST['insert_table'];
 $sql_k = "SELECT COLUMN_NAME,ORDINAL_POSITION,DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '".$table."' ORDER BY `COLUMNS`.`ORDINAL_POSITION` ASC";
 $result = $conn->query($sql_k);
@@ -71,15 +72,16 @@ $keys = array(0=>0);
 $data_type = array(0=>0);
 $count = 0;
 foreach( $result as $r ){
-    // print_r($r);
     $keys[$count] = $r['COLUMN_NAME'];
     $data_type[$count] = $r['DATA_TYPE'];
     $count += 1;
 }
+
+// 生成Insert的sql指令
 //      INSERT INTO  table_name  VALUES (value1, value2, value3...);
 $sql = "INSERT INTO `".$table."` VALUES (";
 $len_k = count($keys);
-// $count = 0;
+// 依照各欄位的名字，依序將前一頁輸入的值加進sql指令中
 for($i=0;$i<$len_k;$i++){
     $k = $keys[$i];
     if($data_type[$i]=='int'){
@@ -97,6 +99,7 @@ for($i=0;$i<$len_k;$i++){
     
 }
 
+// 執行指令
 $result = $conn->query($sql);
 
 ?>
@@ -105,8 +108,8 @@ $result = $conn->query($sql);
             <div class="container">
                 <div class="row justify-content-center">
                 <div class="panel-body">
-                    <!-- <p><?php //print_r( $keys);  ?></p> -->
 <?php
+// 印出sql指令以及OK
 echo "<h5>".$sql."</h5>";
 echo "<h5> Query OK! </h5>";
 ?>
