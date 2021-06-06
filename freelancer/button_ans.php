@@ -160,26 +160,47 @@ elseif($query_type=='update'){
         $sql = "update `".$table."` set `".$column."`=".$data." where ( `doctor_id` = ".$id_1." and `patient_id` = ".$id_2." and `outpatient_id` = ".$id_3.")" ; 
     }
 }
-elseif($query_type=='nested'){
+elseif($query_type=='nested-in'){
     if($_POST['nested_type']=='Nested-In'){
         $type = 'IN';
     }
     elseif($_POST['nested_type']=='Nested-Not In'){
         $type = 'NOT IN';
     }
-    elseif($_POST['nested_type']=='Nested-Exists'){
-        $type = 'EXISTS';
-    }
-    elseif($_POST['nested_type']=='Nested-Not Exists'){
-        $type = 'NOT EXISTS';
-    }
+    // elseif($_POST['nested_type']=='Nested-Exists'){
+    //     $type = 'EXISTS';
+    // }
+    // elseif($_POST['nested_type']=='Nested-Not Exists'){
+    //     $type = 'NOT EXISTS';
+    // }
     $table_select = $_POST['nested_table_select'];
     $select_col = $_POST['nested_column'];
     $select_constraint = $_POST['nested_column_constraint'];
     $nest_select_col = $_POST['nested_column_nest'];
     $nest_table = $_POST['nested_table_nest'];
     $nest_condition = $_POST['nested_condition'];
-    $sql = "SELECT `".$select_col."` FROM `".$table_select."` WHERE `".$select_constraint."` ".$type." ( SELECT `".$nest_select_col."` FROM `".$nest_table."` WHERE ".$nest_condition." )";
+    $sql = "SELECT ".$select_col." FROM `".$table_select."` WHERE `".$select_constraint."` ".$type." ( SELECT `".$nest_select_col."` FROM `".$nest_table."` WHERE ".$nest_condition." )";
+}
+elseif($query_type=='nested-exist'){
+    // if($_POST['nested_type']=='Nested-In'){
+    //     $type = 'IN';
+    // }
+    // elseif($_POST['nested_type']=='Nested-Not In'){
+    //     $type = 'NOT IN';
+    // }
+    if($_POST['exists_type']=='Nested-Exists'){
+        $type = 'EXISTS';
+    }
+    elseif($_POST['exists_type']=='Nested-Not Exists'){
+        $type = 'NOT EXISTS';
+    }
+    $table_select = $_POST['exists_table_select'];
+    $select_col = $_POST['exists_column'];
+    // $select_constraint = $_POST['exists_column_constraint'];
+    $nest_select_col = $_POST['exists_column_nest'];
+    $nest_table = $_POST['exists_table_nest'];
+    $nest_condition = $_POST['exists_condition'];
+    $sql = "SELECT ".$select_col." FROM `".$table_select."` WHERE ".$type." ( SELECT `".$nest_select_col."` FROM `".$nest_table."` WHERE ".$nest_condition." )";
 }
 elseif($query_type=='aggregate'){
     
@@ -245,7 +266,7 @@ elseif($query_type=='aggregate-having'){
 }
 
 // 執行sql
-if(($query_type=='select') or ($query_type=='nested') or ($query_type=='aggregate') or ($query_type=='aggregate-having') ){
+if(($query_type=='select') or ($query_type=='nested-in')or ($query_type=='nested-exist') or ($query_type=='aggregate') or ($query_type=='aggregate-having') ){
     // $sql = $sql_origin;
     $result = $conn->query($sql);
     $row = mysqli_fetch_array($result);
@@ -271,7 +292,7 @@ else{
                 <div class="row justify-content-center">
                 <div class="panel-body">
 <?php
-if( ($query_type=='select') or ($query_type=='nested') or ($query_type=='aggregate') or ($query_type=='aggregate-having') ){
+if( ($query_type=='select') or ($query_type=='nested-in')or ($query_type=='nested-exist') or ($query_type=='aggregate') or ($query_type=='aggregate-having') ){
     // echo '<p>'.$type.$col_to_agg.$table.$condition.'</p>';
     echo '<p>'.$sql.'</p>';
                     echo "<table class='table'>";

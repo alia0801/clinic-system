@@ -64,7 +64,8 @@
                                      <option value="Delete">
                                      <option value="Insert">
                                      <option value="Update">
-                                     <option value="Nested">
+                                     <option value="Nested-In">
+                                     <option value="Nested-Exist">
                                      <option value="Aggregate">
                                      <option value="Aggregate-Having">
                                      <!-- <option value="Nested-In">
@@ -191,21 +192,21 @@
         </div>
 
         <!-- Portfolio Item 6 -->
-        <div class="col-md-6 col-lg-4">
+        <div class="col-md-6 col-lg-6">
               <br>
             <div class="card text-center" style = "background: #007bff; padding:3px">
                 <div class="stat-widget-two">
                     <div class="stat-content">
                         <div class="card bg-retired" style = "background: #c0defc">
-                            <h3 class="card-title">Nested </h3>
+                            <h3 class="card-title">Nested(In/Not in) </h3>
                             <br>
                                 <h5> which type: </h5>
                                 <input class="form-control" id="nested_type" name="nested_type" type="text" value="" list="nested_category"  autocomplete="off" />
                                 <datalist id="nested_category">  
                                      <option value="Nested-In">
                                      <option value="Nested-Not In">
-                                     <option value="Nested-Exists">
-                                     <option value="Nested-Not Exists">
+                                     <!-- <option value="Nested-Exists">
+                                     <option value="Nested-Not Exists"> -->
                                 </datalist>   
                                 <h5> select which table: </h5>
                                 <input class="form-control" id="nested_table_select"name="nested_table_select" type="text" list="table_category" value="" />
@@ -237,7 +238,54 @@
             </div>
         </div>
 
-        <div class="col-md-6 col-lg-4">
+                <!-- Portfolio Item 6 -->
+                <div class="col-md-6 col-lg-6">
+              <br>
+            <div class="card text-center" style = "background: #007bff; padding:3px">
+                <div class="stat-widget-two">
+                    <div class="stat-content">
+                        <div class="card bg-retired" style = "background: #c0defc">
+                            <h3 class="card-title">Nested(Exists/Not exists) </h3>
+                            <br>
+                                <h5> which type: </h5>
+                                <input class="form-control" id="exists_type" name="exists_type" type="text" value="" list="nested_category2"  autocomplete="off" />
+                                <datalist id="nested_category2">  
+                                     <!-- <option value="Nested-In">
+                                     <option value="Nested-Not In"> -->
+                                     <option value="Nested-Exists">
+                                     <option value="Nested-Not Exists">
+                                </datalist>   
+                                <h5> select which table: </h5>
+                                <input class="form-control" id="exists_table_select"name="exists_table_select" type="text" list="table_category" value="" />
+                                <datalist id="table_category">  
+                                     <option value="chemist">
+                                     <option value="doctor">
+                                     <option value="examine_record">
+                                     <option value="nurse">
+                                     <option value="outpatient">
+                                     <option value="patient">
+                                     <option value="prescription">
+                                     <option value="register_record">
+                                     <option value="treat_record">
+                                </datalist> 
+                                <h5> select which column: </h5>
+                                <input class="form-control" id="exists_column"name="exists_column" type="text" value="" />
+                                <!-- <h5> constraint by which column: </h5>
+                                <input class="form-control" id="exists_column_constraint"name="exists_column_constraint" type="text" value="" /> -->
+                                
+                                <h5> nested select which column: </h5>
+                                <input class="form-control" id="exists_column_nest"name="exists_column_nest" type="text" value="" />
+                                <h5> nested select which table: </h5>
+                                <input class="form-control" id="exists_table_nest"name="exists_table_nest" type="text" list="table_category" value="" />
+                                <h5> nested select by what condition: </h5><h6>format: [column name] [operation] [value]<br> eg. id=5, salary>50000 </h6>
+                                <input class="form-control" id="exists_condition"name="exists_condition" type="text" value="" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-6">
               <br>
             <div class="card text-center" style = "background: #007bff; padding:3px">
                 <div class="stat-widget-two">
@@ -272,7 +320,7 @@
             </div>
         </div>
 
-        <div class="col-md-6 col-lg-4">
+        <div class="col-md-6 col-lg-6">
               <br>
             <div class="card text-center" style = "background: #007bff; padding:3px">
                 <div class="stat-widget-two">
